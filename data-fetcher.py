@@ -5,7 +5,7 @@ import csv
 import re
 import os
 
-path = '/Users/shivahs/Documents/IRS/stash/USHI/go-auth-test/thrifty/statements/'
+path = 'statements/'
 
 files = [f for f in os.listdir(path)]
 files = filter(lambda f: f.endswith(('.pdf','.PDF')), files)
@@ -33,13 +33,20 @@ for i, file in enumerate(files):
 
     os.remove("output"+ str(i) +".csv")
 
-names2 = ['Date', 'Transaction Description', 'Amount']
+names2 = ['Date', 'TransactionDescription', 'TransactionAmount']
 df2 = pd.read_csv("semi-final.csv", names=names2, header=None)
 
-df2['Date-New']=pd.to_datetime(df2.Date, format='%d/%m/%Y')
-df2.sort_values(by='Date-New', ascending=True, inplace=True)
+df2['TransactionDate']=pd.to_datetime(df2.Date, format='%d/%m/%Y')
+df2.sort_values(by='TransactionDate', ascending=True, inplace=True)
 del df2['Date']
 
 df2 = df2.reset_index(drop=True)
 
-print(df2[df2.Amount.str.contains('Cr')])
+df2['TransactionType'] = ["Credit" if x == True else "Debit" for x in df2.TransactionAmount.str.contains('Cr')]
+df2.TransactionAmount = [col.replace(' Cr', '') for col in df2.TransactionAmount]
+df2["TransactionAmount"] = df2["TransactionAmount"].str.replace(",","").astype(float)
+df2["TransactionAmount"] = pd.to_numeric(df2["TransactionAmount"])
+
+df2.to_csv('txn-dataset.csv', mode='a', index=False, header=False, )
+
+os.remove("semi-final.csv")

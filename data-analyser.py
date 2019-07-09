@@ -1,21 +1,29 @@
 import pandas as pd
-from tabula import wrapper
 import numpy as np
+import matplotlib.pylab as plt
+from matplotlib.pylab import rcParams
+from pandas.plotting import scatter_matrix
 
 
-path = '/Users/shivahs/Documents/IRS/stash/USHI/go-auth-test/thrifty/final.csv'
+rcParams['figure.figsize'] = 15, 6
 
-names = ['Date', 'Transaction Description', 'Amount']
-df = pd.read_csv(path, names=names, header=None)
+path = 'txn-dataset.csv'
 
-df['Date-New']=pd.to_datetime(df.Date, format='%d/%m/%Y')
+names = ['TransactionDescription', 'TransactionAmount','TransactionDate', 'TransactionType' ]
 
-df.sort_values(by='Date-New', ascending=True, inplace=True)
+df = pd.read_csv(path, names=names, header=None, parse_dates=['TransactionDate'], index_col='TransactionDate')
+df.plot()
+# plt.subplot()
+# df.plot.pie(subplots=True)
+# scatter_matrix(df)
+# df.hist()
 
-del df['Date']
+# ts = df['TransactionAmount'] 
+# ts.plot()
+# ts.hist()
 
-df = df.reset_index(drop=True)
+# ts_log = np.log(ts)
+# ts_log.plot()
+# ts_log.hist()
 
-
-print(df[nov_mask])
-
+plt.show()
