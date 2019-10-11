@@ -12,18 +12,19 @@ path = 'txn-dataset.csv'
 names = ['TransactionDescription', 'TransactionAmount','TransactionDate', 'TransactionType' ]
 
 df = pd.read_csv(path, names=names, header=None, parse_dates=['TransactionDate'], index_col='TransactionDate')
-df.plot()
+
+# df.plot()
 # plt.subplot()
 # df.plot.pie(subplots=True)
 # scatter_matrix(df)
 # df.hist()
 
-# ts = df['TransactionAmount'] 
-# ts.plot()
+ts = df['TransactionAmount'] 
+ts.plot()
 # ts.hist()
 
-# ts_log = np.log(ts)
-# ts_log.plot()
+ts_log = np.log(ts)
+ts_log.plot()
 # ts_log.hist()
 
 plt.show()
